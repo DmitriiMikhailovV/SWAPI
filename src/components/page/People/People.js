@@ -18,7 +18,6 @@ const People = () => {
       let resArray = res.data.results
       setData((prevState) => [...prevState, ...resArray])
       setNext(res.data.next)
-      console.log("GET COMPLITE")
     })
   }
 
@@ -30,7 +29,6 @@ const People = () => {
 
   useEffect(() => {
     getStartData()
-    console.log("getStartData")
   }, [])
 
   useEffect(() => {
@@ -38,10 +36,8 @@ const People = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
         console.log("scroll bottom")
         if (typeof next === "string") {
-          console.log("condition complite")
           fetchData(next)
         } else {
-          console.log("end data")
         }
       }
     }
