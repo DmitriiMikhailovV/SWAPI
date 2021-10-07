@@ -3,7 +3,7 @@ import { SpinnerContainer, Spinner } from "./styles"
 const Loading = ({ loading }) => {
   return (
     <SpinnerContainer>
-      <Spinner loading={loading} />
+      <Spinner loading={+loading} />
     </SpinnerContainer>
   )
 }

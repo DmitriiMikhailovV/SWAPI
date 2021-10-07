@@ -1,7 +1,7 @@
 import PageTitle from "../../gen/PageTitle/PageTitle"
 import SortingContainer from "../../gen/SortingContainer/SortingContainer"
 import img from "../../../images/Star-Destroyer-Wallpaper-4k-scaled.jpg"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback, createRef } from "react"
 import { StyledFlex, StyledContainer } from "./styles"
 import VehicleCard from "../../gen/VehicleCard/VehicleCard"
 import Loading from "../../gen/Loading/Loading"
@@ -12,14 +12,30 @@ const Vehicles = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [sortCondition, setSortCondition] = useState("none")
 
+  const ref = createRef()
+  const lastItemRef = useCallback(
+    (node) => {
+      if (isLoading) return
+      if (ref.current) ref.current.disconnect()
+      ref.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          fetchData()
+        }
+      })
+      if (node) ref.current.observe(node)
+    },
+    [isLoading]
+  )
+
   const fetchData = () => {
     if (next) {
-      console.log("fetch")
       setIsLoading(true)
       fetch(next)
         .then((res) => res.json())
         .then((result) => {
-          setVehicles([...vehicles, ...result.results])
+          setVehicles((prevVihicles) => {
+            return [...new Set([...prevVihicles, ...result.results])]
+          })
           setNext(result.next)
           setIsLoading(false)
         })
@@ -56,9 +72,22 @@ const Vehicles = () => {
     }
   }
 
-  const arrayOfVehicle = () => {
-    if (vehicles) {
-      return vehicles.map((item, index) => (
+  const arrayOfVehicle = vehicles.map((item, index) => {
+    if (vehicles.length === index + 1) {
+      return (
+        <VehicleCard
+          ref={lastItemRef}
+          key={index}
+          name={item.name}
+          manufacturer={item.manufacturer}
+          model={item.model}
+          crew={item.crew}
+          cargo_capacity={item.cargo_capacity}
+          cost_in_credits={item.cost_in_credits}
+        />
+      )
+    } else {
+      return (
         <VehicleCard
           key={index}
           name={item.name}
@@ -68,9 +97,9 @@ const Vehicles = () => {
           cargo_capacity={item.cargo_capacity}
           cost_in_credits={item.cost_in_credits}
         />
-      ))
+      )
     }
-  }
+  })
 
   useEffect(() => {
     fetchData()
@@ -84,20 +113,12 @@ const Vehicles = () => {
   return (
     <StyledContainer url={img}>
       <Loading loading={isLoading} />
-      <button
-        onClick={(e) => {
-          console.log("click fetch data")
-          fetchData()
-        }}
-      >
-        NEXT
-      </button>
       <PageTitle title={"VEHICLES"} />
       <SortingContainer
         onChange={(e) => setSortCondition(e.target.value)}
         arrayForSorting={arrayForSorting}
       />
-      <StyledFlex>{arrayOfVehicle()}</StyledFlex>
+      <StyledFlex>{arrayOfVehicle}</StyledFlex>
     </StyledContainer>
   )
 }
