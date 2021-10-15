@@ -1,7 +1,7 @@
 import PageTitle from "../../gen/PageTitle/PageTitle"
 import SortingContainer from "../../gen/SortingContainer/SortingContainer"
 import img from "../../../images/Star-Destroyer-Wallpaper-4k-scaled.jpg"
-import { useEffect, useState, useRef, useCallback, createRef } from "react"
+import { useEffect, useState, useCallback, createRef } from "react"
 import { StyledFlex, StyledContainer } from "./styles"
 import VehicleCard from "../../gen/VehicleCard/VehicleCard"
 import Loading from "../../gen/Loading/Loading"
@@ -24,6 +24,7 @@ const Vehicles = () => {
       })
       if (node) ref.current.observe(node)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isLoading]
   )
 
@@ -33,8 +34,8 @@ const Vehicles = () => {
       fetch(next)
         .then((res) => res.json())
         .then((result) => {
-          setVehicles((prevVihicles) => {
-            return [...new Set([...prevVihicles, ...result.results])]
+          setVehicles((prevVehicles) => {
+            return [...new Set([...prevVehicles, ...result.results])]
           })
           setNext(result.next)
           setIsLoading(false)
@@ -108,6 +109,7 @@ const Vehicles = () => {
 
   useEffect(() => {
     sortData(sortCondition)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortCondition])
 
   return (
