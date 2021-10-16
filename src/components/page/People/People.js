@@ -11,7 +11,6 @@ const People = () => {
   const [people, setPeople] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
-  const [filterPeople, setFilterPeople] = useState([])
 
   const ref = createRef()
   const lastItemRef = useCallback(
@@ -58,65 +57,44 @@ const People = () => {
   }
 
   useEffect(() => {
-    console.log("fetch")
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const filtredPeople = () => {
+    return people.filter((item) => item.starships.length === 0)
+  }
+
   const arrayOfPeoples = isChecked
-    ? filterPeople
-        .filter((item) => item.starships.length === 0)
-        .map((item, index) => {
-          if (people.length === index + 1) {
-            return (
-              <PeopleCard
-                ref={lastItemRef}
-                key={item.name}
-                name={item.name}
-                gender={item.gender}
-                birth_year={item.birth_year}
-                homeworld={item.homeworld}
-                starships={item.starships}
-              />
-            )
-          } else {
-            return (
-              <PeopleCard
-                key={item.name}
-                name={item.name}
-                gender={item.gender}
-                birth_year={item.birth_year}
-                homeworld={item.homeworld}
-                starships={item.starships}
-              />
-            )
-          }
-        })
-    : people.map((item, index) => {
-        if (people.length === index + 1) {
-          return (
-            <PeopleCard
-              ref={lastItemRef}
-              key={item.name}
-              name={item.name}
-              gender={item.gender}
-              birth_year={item.birth_year}
-              homeworld={item.homeworld}
-              starships={item.starships}
-            />
-          )
-        } else {
-          return (
-            <PeopleCard
-              key={item.name}
-              name={item.name}
-              gender={item.gender}
-              birth_year={item.birth_year}
-              homeworld={item.homeworld}
-              starships={item.starships}
-            />
-          )
+    ? filtredPeople().map((item, index) => {
+        const peopleCardAttribute = {
+          key: index,
+          name: item.name,
+          gender: item.gender,
+          birth_year: item.birth_year,
+          homeworld: item.homeworld,
+          starships: item.starships,
         }
+
+        if (filtredPeople().length === index + 1) {
+          peopleCardAttribute.ref = lastItemRef
+        }
+        return <PeopleCard {...peopleCardAttribute} />
+      })
+    : people.map((item, index) => {
+        const peopleCardAttribute = {
+          key: index,
+          name: item.name,
+          gender: item.gender,
+          birth_year: item.birth_year,
+          homeworld: item.homeworld,
+          starships: item.starships,
+        }
+
+        if (people.length === index + 1) {
+          peopleCardAttribute.ref = lastItemRef
+        }
+        return <PeopleCard {...peopleCardAttribute} />
       })
 
   return (
@@ -127,7 +105,6 @@ const People = () => {
         checked={isChecked}
         onChange={(e) => {
           setIsChecked(!isChecked)
-          setFilterPeople([...filterPeople, ...people])
         }}
       />
       <StyledFlex>{arrayOfPeoples}</StyledFlex>
