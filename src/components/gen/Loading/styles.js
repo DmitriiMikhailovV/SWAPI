@@ -26,8 +26,8 @@ export const Spinner = styled.div`
 
 export const SpinnerContainer = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: calc(50% - 30px);
+  left: calc(50% - 30px);
   z-index: 999;
 `
 

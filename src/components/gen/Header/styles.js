@@ -1,5 +1,6 @@
 import styled from "styled-components/macro"
 import { Link } from "react-router-dom"
+import { device } from "../../../MobileViewBreackpoints"
 
 export const StyledHeader = styled.header`
   width: 800px;
@@ -22,6 +23,10 @@ export const StyledHeader = styled.header`
   /* &:hover {
     margin: 0px auto;
   } */
+  @media ${device.tabletLandscape} {
+    width: 100%;
+    border-radius: 0 0 0 0;
+  }
 `
 
 export const StyledLink = styled(Link)`

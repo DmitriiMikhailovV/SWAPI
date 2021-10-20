@@ -1,5 +1,6 @@
 import styled from "styled-components/macro"
 import { Link } from "react-router-dom"
+import { device } from "../../../MobileViewBreackpoints"
 
 export const StyledContainer = styled.div`
   display: flex;
@@ -12,6 +13,10 @@ export const StyledContainer = styled.div`
   width: 100vw;
   background-image: url(${(props) => props.url});
   background-size: cover;
+
+  @media ${device.mobileL} {
+    flex-direction: column;
+  }
 `
 
 export const StyledWindow = styled.div`
@@ -25,6 +30,10 @@ export const StyledWindow = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   width: 600px;
   height: 300px;
+
+  @media ${device.mobileL} {
+    width: 100%;
+  }
 `
 
 export const StyledLink = styled(Link)`
@@ -47,5 +56,9 @@ export const StyledLink = styled(Link)`
     &:hover {
       background-color: ${({ theme }) => theme.additional};
     }
+  }
+
+  @media ${device.mobileL} {
+    margin: 30px 0;
   }
 `
